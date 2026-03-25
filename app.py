@@ -492,6 +492,11 @@ if st.button("Run Backtest"):
     st.json(metrics)
     if st.button("Run Backtest"):
         data = fetch_stock_data(ticker, str(start), str(end))
+
+        if data.empty:
+            st.error("No data found. Try another stock or date range.")
+            st.stop()
+
         data = add_moving_averages(data)
         data = generate_signals(data)
         data, trades = backtest(data, capital)
