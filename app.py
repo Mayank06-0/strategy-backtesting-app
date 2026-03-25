@@ -456,14 +456,6 @@ def plot_results(
 # ================================
 # UI + RUN BACKTEST
 # ================================
-
-st.title("📊 Strategy Backtesting App")
-
-ticker = st.text_input("Stock Ticker", "AAPL")
-start = st.date_input("Start Date")
-end = st.date_input("End Date")
-capital = st.number_input("Initial Capital", value=10000.0)
-
 # 🔥 Run Button
 if st.button("🚀 Run Backtest"):
     data = fetch_stock_data(ticker, str(start), str(end))
