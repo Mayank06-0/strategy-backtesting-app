@@ -481,15 +481,7 @@ def main():
     print("=" * 54)
 
 
-if st.button("Run Backtest"):
-    data = fetch_stock_data(ticker, str(start), str(end))
-    data = add_moving_averages(data)
-    data = generate_signals(data)
-    data, trades = backtest(data, capital)
-    metrics = calculate_metrics(data, trades, capital)
 
-    st.write("### 📈 Performance")
-    st.json(metrics)
     if st.button("Run Backtest"):
         data = fetch_stock_data(ticker, str(start), str(end))
 
