@@ -453,48 +453,36 @@ def plot_results(
 # ══════════════════════════════════════════════════════════════════════
 # MAIN — Run the full pipeline
 # ══════════════════════════════════════════════════════════════════════
+# ================================
+# UI + RUN BACKTEST
+# ================================
 
-def main():
-    print("=" * 54)
-    print("   BACKTESTING SYSTEM — MA Crossover Strategy")
-    print("=" * 54)
+st.title("📊 Strategy Backtesting App")
 
-    # Step 1: Fetch data
-    data = fetch_stock_data(TICKER, START_DATE, END_DATE)
+ticker = st.text_input("Stock Ticker", "AAPL")
+start = st.date_input("Start Date")
+end = st.date_input("End Date")
+capital = st.number_input("Initial Capital", value=10000.0)
 
-    # Step 2: Add indicators
-    data = add_moving_averages(data, SHORT_WINDOW, LONG_WINDOW)
+# 🔥 Run Button
+if st.button("🚀 Run Backtest"):
+    data = fetch_stock_data(ticker, str(start), str(end))
 
-    # Step 3: Generate signals
+    if data.empty:
+        st.error("No data found. Try another stock or date range.")
+        st.stop()
+
+    data = add_moving_averages(data)
     data = generate_signals(data)
+    data, trades = backtest(data, capital)
+    metrics = calculate_metrics(data, trades, capital)
 
-    # Step 4: Simulate trades
-    data, trades = backtest(data, INITIAL_CAPITAL)
+    st.write("### 📈 Performance")
+    st.json(metrics)
 
-    # Step 5: Performance metrics
-    metrics = calculate_metrics(data, trades, INITIAL_CAPITAL)
-
-    # Step 6: Plot results
-    plot_results(data, trades, metrics, TICKER, SAVE_CHART, CHART_FILENAME)
-
-    print("\n  Done. ✓")
-    print("=" * 54)
+    plot_results(data, trades, metrics, ticker)
 
 
 
-    if st.button("Run Backtest"):
-        data = fetch_stock_data(ticker, str(start), str(end))
 
-        if data.empty:
-            st.error("No data found. Try another stock or date range.")
-            st.stop()
-
-        data = add_moving_averages(data)
-        data = generate_signals(data)
-        data, trades = backtest(data, capital)
-        metrics = calculate_metrics(data, trades, capital)
-
-        st.write("### 📈 Performance")
-        st.json(metrics)
-
-        plot_results(data, trades, metrics, ticker)
+  
